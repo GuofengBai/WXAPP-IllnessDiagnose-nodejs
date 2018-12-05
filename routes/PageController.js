@@ -1,3 +1,9 @@
+/*
+
+  主要做网页界面展示
+
+*/
+
 var express = require('express');
 var router = express.Router();
 
