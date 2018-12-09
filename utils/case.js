@@ -17,3 +17,46 @@
     等等
 
 */
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://192.168.1.107:27017/illnessDiagnose');
+
+var caseSchema={
+    "id":String,
+    "user":{
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'user'
+    },
+    "date":String,
+    "title":String,
+    "content":String,
+    "pictures":[],
+    "date":String,
+    "diagnosis":{
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'diagnosis'
+    }
+};
+
+var Case=mongoose.model("case",caseSchema);
+
+
+function getCaseList(page){
+
+}
+
+function getCaseListWithQuery(query,page){
+
+}
+
+function getCaseListOfUser(userid,page){
+
+}
+
+
+function getCaseDetail(caseid){
+
+}
+
+function createCase(newcase){
+
+}
