@@ -70,7 +70,7 @@ router.post('/update/:id',function(req, res, next){
     var id=req.params.id;
     var session_key=req.body.session_key;
     var type=req.body.type;
-    //....
+    //....not complete
     schema.User.findOne({ "openid":id }, function (err, user) {
         if(err){
             console.log(err);

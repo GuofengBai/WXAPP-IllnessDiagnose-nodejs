@@ -27,7 +27,6 @@ var caseSchema={
     "title":String,
     "content":String,
     "pictures":[],
-    "date":String,
     "diagnosis":{
         type: mongoose.Schema.Types.ObjectId,
         ref : 'diagnosis'
