@@ -11,7 +11,7 @@ router.get('/case/:id',function getDiagnosisListOfCase(req, res, next) {
     schema.Case.find({_id: caseid}).populate("diagnosis").exec(function (err, data) {
         if(err){
             console.log(err);
-            res.send(err);
+            res.json(err);
         }else{
             res.json(data.diagnosis);
         }
@@ -29,7 +29,7 @@ router.post('/make',function makeDiagnosis(req, res, next){
     });
     newdiag.save(function(err,data){
         if(err){
-            res.send(err);
+            res.json(err);
             console.log(err);
         } else{
             res.json({"success":"success"});

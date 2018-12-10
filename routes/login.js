@@ -16,10 +16,30 @@
 var express = require('express');
 var router = express.Router();
 
-
+const appid="aaa";
+const secret="sec";
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+
+router.get('/login/:code', function(req, res, next) {
+  var res_code=req.params.code;
+  var l = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + 'secret=' + secret + 'js_code=' + res_code + 'grant_type=authorization_code';
+    request({
+        url: l,
+        data: {},
+        method: 'GET',
+        success: function (response) {
+          console.log(response);
+
+          //checkifregistered
+            // register
+          res.json(response);
+        }
+    });
+});
+
+
 
 module.exports = router;

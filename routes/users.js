@@ -12,7 +12,7 @@ router.get('/:id', function(req, res, next) {
     schema.User.findOne({_id: id,type:"user"}).exec(function (err, data) {
         if(err){
             console.log(err);
-            res.send(err);
+            res.json(err);
         }else{
             res.json(data);
         }
@@ -25,7 +25,7 @@ router.get('/doctor/:id',function(req, res, next) {
     schema.User.findOne({_id: id,type:"doctor"}).exec(function (err, data) {
         if(err){
             console.log(err);
-            res.send(err);
+            res.json(err);
         }else{
             res.json(data);
         }
@@ -43,7 +43,7 @@ router.post('/register',function(req, res, next){
     });
     newuser.save(function(err,data){
         if(err){
-            res.send(err);
+            res.json(err);
             console.log(err);
         } else{
             res.json({"success":"success"});
@@ -92,7 +92,7 @@ router.get('/test1',function(req, res, next) {
         if(err){
             console.log(err);
         }else{
-            res.send(data);
+            res.json(data);
         }
     });
 

@@ -12,7 +12,7 @@ router.get('/list', function getCaseList(req, res, next) {
     schema.Case.find().exec(function (err, data) {
         if(err){
             console.log(err);
-            res.send(err);
+            res.json(err);
         }else{
             res.json(data);
         }
@@ -25,7 +25,7 @@ router.get('/list/:page', function getCaseListByPage(req, res, next) {
     schema.Case.find().skip(skip_num).limit(page_size).exec(function (err, data) {
         if(err){
             console.log(err);
-            res.send(err);
+            res.json(err);
         }else{
             res.json(data);
         }
@@ -38,7 +38,7 @@ router.get('/search/:keyword', function getCaseListWithQuery(req, res, next) {
     schema.Case.find({title: {'$regex': keyword}}).exec(function (err, data) {
         if(err){
             console.log(err);
-            res.send(err);
+            res.json(err);
         }else{
             res.json(data);
         }
@@ -50,7 +50,7 @@ router.get('/user/:id', function getCaseListOfUser(req, res, next) {
     schema.User.findOne({_id: id}).populate('cases').exec(function (err, data) {
         if(err){
             console.log(err);
-            res.send(err);
+            res.json(err);
         }else{
             res.json(data.cases);
         }
@@ -62,7 +62,7 @@ router.get('/:id',function getCaseDetail(req, res, next) {
     schema.Case.findOne({_id: id}).populate("user").populate("diagnosis").exec(function (err, data) {
         if(err){
             console.log(err);
-            res.send(err);
+            res.json(err);
         }else{
             res.json(data);
         }
@@ -81,12 +81,18 @@ router.post('/create',function createCase(req, res, next){
     });
     newcase.save(function(err,data){
         if(err){
-            res.send(err);
+            res.json(err);
             console.log(err);
         } else{
             res.json({"success":"success"});
         }
     });
 });
+
+router.get('/savepicture', function(req, res, next) {
+    res.render('index', { title: 'Express' });
+});
+
+
 
 module.exports = router;
