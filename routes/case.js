@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var schema=require('../utils/dbSchema');
 
-const page_entries=20;
+const page_size=20;
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -18,6 +18,20 @@ router.get('/list', function getCaseList(req, res, next) {
         }
     });
 });
+
+router.get('/list/:page', function getCaseListByPage(req, res, next) {
+    var page=req.params.page;
+    var skip_num=(page-1)*page_size
+    schema.Case.find().skip(skip_num).limit(page_size).exec(function (err, data) {
+        if(err){
+            console.log(err);
+            res.send(err);
+        }else{
+            res.json(data);
+        }
+    });
+});
+
 
 router.get('/search/:keyword', function getCaseListWithQuery(req, res, next) {
     var keyword=req.params.keyword;

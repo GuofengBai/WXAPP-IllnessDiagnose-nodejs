@@ -6,7 +6,6 @@ var userSchema={
     "age":String,
     "gender":String,
     "contact":String,
-    "id":String,
     "openid":String,
     "session_key":String,
     "type":String ,  //user,doctor
@@ -18,7 +17,6 @@ var userSchema={
 var User=mongoose.model("user",userSchema);
 
 var caseSchema={
-    "id":String,
     "user":{
         type: mongoose.Schema.Types.ObjectId,
         ref : 'user'
@@ -36,7 +34,6 @@ var caseSchema={
 var Case=mongoose.model("case",caseSchema);
 
 var diagnosisSchema={
-    "id":String,
     "case":{
         type: mongoose.Schema.Types.ObjectId,
         ref : 'case'
