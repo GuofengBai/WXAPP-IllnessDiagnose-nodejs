@@ -8,8 +8,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:id', function(req, res, next) {
-    var id=req.params.id;
-    schema.User.findOne({openid: id,type:"user"}).exec(function (err, data) {
+    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    schema.User.findOne({_id: id,type:"user"}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.send(err);
@@ -21,8 +21,8 @@ router.get('/:id', function(req, res, next) {
    // res.end(JSON.stringify(user));
 });
 router.get('/doctor/:id',function(req, res, next) {
-    var id=req.params.id;
-    schema.User.findOne({openid: id,type:"doctor"}).exec(function (err, data) {
+    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    schema.User.findOne({_id: id,type:"doctor"}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.send(err);
@@ -52,8 +52,8 @@ router.post('/register',function(req, res, next){
 });
 
 router.get('/registered/:id',function(req, res, next) {
-    var id=req.params.id;
-    schema.User.findOne({ "openid":openid }, function (err, user) {
+    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    schema.User.findOne({ _id:id }, function (err, user) {
         if(!err){
             if(user){
                 res.json({"registered":"true"});
@@ -67,11 +67,11 @@ router.get('/registered/:id',function(req, res, next) {
 });
 
 router.post('/update/:id',function(req, res, next){
-    var id=req.params.id;
+    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
     var session_key=req.body.session_key;
     var type=req.body.type;
     //....not complete
-    schema.User.findOne({ "openid":id }, function (err, user) {
+    schema.User.findOne({ _id:id }, function (err, user) {
         if(err){
             console.log(err);
         }else{

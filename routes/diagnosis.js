@@ -23,7 +23,7 @@ router.post('/make',function makeDiagnosis(req, res, next){
 
     var newdiag=new schema.Diagnosis({
         "case":schema.mongoose.Schema.Types.ObjectId(diagnosis.caseid),
-        "doctor":diagnosis.userid,
+        "doctor":diagnosis.schema.mongoose.Schema.Types.ObjectId(userid),
         "date":diagnosis.date,
         "content":diagnosis.content
     });

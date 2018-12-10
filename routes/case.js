@@ -9,8 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/list', function getCaseList(req, res, next) {
-    var id=req.params.id;
-    schema.User.find().exec(function (err, data) {
+    schema.Case.find().exec(function (err, data) {
         if(err){
             console.log(err);
             res.send(err);
@@ -33,8 +32,8 @@ router.get('/search/:keyword', function getCaseListWithQuery(req, res, next) {
 });
 
 router.get('/user/:id', function getCaseListOfUser(req, res, next) {
-    var id=req.params.id;
-    schema.User.findOne({openid: id}).populate('cases').exec(function (err, data) {
+    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    schema.User.findOne({_id: id}).populate('cases').exec(function (err, data) {
         if(err){
             console.log(err);
             res.send(err);
@@ -60,7 +59,7 @@ router.post('/create',function createCase(req, res, next){
     var casetmp=req.body.case;
 
     var newcase=new schema.Case({
-        "user":casetmp.userid,
+        "user":schema.mongoose.Schema.Types.ObjectId(casetmp.userid),
         "date":casetmp.date,
         "title":casetmp.title,
         "content":casetmp.content,
