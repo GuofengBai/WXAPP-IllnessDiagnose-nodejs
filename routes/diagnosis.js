@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/case/:id',function getDiagnosisListOfCase(req, res, next) {
     var caseid=schema.mongoose.Types.ObjectId(req.params.id);
-    schema.Case.find({_id: caseid}).exec(function (err, data) {
+    schema.Cases.find({_id: caseid}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -22,7 +22,7 @@ router.post('/make',function makeDiagnosis(req, res, next){
     var diagnosis=req.body.diagnosis;
     var doctor_name="";
 
-    schema.User.findOne({_id: diagnosis.doctor,type:"doctor"}).exec(function (err, data) {
+    schema.Users.findOne({_id: diagnosis.doctor,type:"doctor"}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);

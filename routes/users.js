@@ -7,9 +7,11 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+
+
 router.get('/:id', function(req, res, next) {
     var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.User.findOne({_id: id,type:"user"}).exec(function (err, data) {
+    schema.Users.findOne({_id: id,type:"user"}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -22,7 +24,7 @@ router.get('/:id', function(req, res, next) {
 });
 router.get('/doctor/:id',function(req, res, next) {
     var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.User.findOne({_id: id,type:"doctor"}).exec(function (err, data) {
+    schema.Users.findOne({_id: id,type:"doctor"}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -53,7 +55,7 @@ router.post('/register',function(req, res, next){
 
 router.get('/registered/:id',function(req, res, next) {
     var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.User.findOne({ _id:id }, function (err, user) {
+    schema.Users.findOne({ _id:id }, function (err, user) {
         if(!err){
             if(user){
                 res.json({"registered":"true"});
@@ -71,7 +73,7 @@ router.post('/update/:id',function(req, res, next){
     var session_key=req.body.session_key;
     var type=req.body.type;
     //....not complete
-    schema.User.findOne({ _id:id }, function (err, user) {
+    schema.Users.findOne({ _id:id }, function (err, user) {
         if(err){
             console.log(err);
         }else{
@@ -84,19 +86,66 @@ router.post('/update/:id',function(req, res, next){
     });
 });
 
-
-
-router.get('/test1',function(req, res, next) {
-
-    schema.User.findOne({openid: "123",type:"user"}).exec(function (err, data) {
+router.post('/all',function(req, res, next) {
+    schema.Users.find().exec(function (err, data) {
         if(err){
             console.log(err);
+            res.json(err);
         }else{
+            console.log(data);
             res.json(data);
         }
     });
+});
 
+router.post('/test1',function(req, res, next) {
 
+    var aaa=new schema.Users({
+        "name":"路人甲",
+        "age":"20",
+        "gender":"男",
+        "contact":"15151545415",
+        "openid":"123456",
+        "session_key":"123456",
+        "type":"user"
+    });
+
+    aaa.save(function(err,diag){
+        if(err){
+            res.json(err);
+            console.log(err);
+        } else {
+            res.json({"success": "success"});
+        }
+        });
+
+    var bbb=new schema.Users({
+        "name":"医生甲",
+        "age":"20",
+        "gender":"男",
+        "contact":"1515154541555",
+        "openid":"12345678",
+        "session_key":"12345678",
+        "type":"doctor"
+    });
+
+    bbb.save();
+});
+
+router.get('/test2',function(req, res, next) {
+    schema.Users.find({},function (err, data) {
+        if(err){
+            console.log(err);
+        }else{
+            console.log(data);
+            res.json(data);
+        }
+    });
+});
+
+router.get('/test3',function(req, res, next) {
+    console.log("aaa");
+    res.render('index');
 });
 
 module.exports = router;

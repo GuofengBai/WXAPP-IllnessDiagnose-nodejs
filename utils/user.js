@@ -121,7 +121,7 @@ function test1(){
 
 async function test2(){
     return new Promise(function (resolve, reject) {
-        User.findOne({openid: "123",type:"user"}).exec(function (err, data) {
+        User.findOne({type:"user"}).exec(function (err, data) {
             if(err){
                 console.log(err);
             }else{

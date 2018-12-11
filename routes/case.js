@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/list', function getCaseList(req, res, next) {
-    schema.Case.find().exec(function (err, data) {
+    schema.Case.find().populate({path:'user'}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -21,8 +21,8 @@ router.get('/list', function getCaseList(req, res, next) {
 
 router.get('/list/:page', function getCaseListByPage(req, res, next) {
     var page=req.params.page;
-    var skip_num=(page-1)*page_size
-    schema.Case.find().skip(skip_num).limit(page_size).exec(function (err, data) {
+    var skip_num=(page-1)*page_size;
+    schema.Cases.find().skip(skip_num).limit(page_size).populate({path:'user'}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -35,7 +35,7 @@ router.get('/list/:page', function getCaseListByPage(req, res, next) {
 
 router.get('/search/:keyword', function getCaseListWithQuery(req, res, next) {
     var keyword=req.params.keyword;
-    schema.Case.find({title: {'$regex': keyword}}).exec(function (err, data) {
+    schema.Cases.find({title: {'$regex': keyword}}).populate({path:'user'}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -47,7 +47,7 @@ router.get('/search/:keyword', function getCaseListWithQuery(req, res, next) {
 
 router.get('/user/:id', function getCaseListOfUser(req, res, next) {
     var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.User.findOne({_id: id}).exec(function (err, data) {
+    schema.Users.findOne({_id: id}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -59,7 +59,7 @@ router.get('/user/:id', function getCaseListOfUser(req, res, next) {
 
 router.get('/:id',function getCaseDetail(req, res, next) {
     var id= schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.Case.findOne({_id: id}).exec(function (err, data) {
+    schema.Cases.findOne({_id: id}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -72,7 +72,7 @@ router.get('/:id',function getCaseDetail(req, res, next) {
 router.post('/create',function createCase(req, res, next){
     var casetmp=req.body.case;
 
-    var newcase=new schema.Case({
+    var newcase=new schema.Cases({
         "user":schema.mongoose.Schema.Types.ObjectId(casetmp.userid),
         "date":casetmp.date,
         "title":casetmp.title,

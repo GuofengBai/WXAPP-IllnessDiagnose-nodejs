@@ -32,7 +32,7 @@ router.get('/login/:code', function(req, res, next) {
         method: 'GET',
         success: function (response) {
           console.log(response);
-
+            res.json(response);
           //checkifregistered
             // register
           res.json(response);

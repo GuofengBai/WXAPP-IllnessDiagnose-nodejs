@@ -12,7 +12,7 @@ var userSchema={
     "cases":[],
     "diagnosis":[],
 };
-var User=mongoose.model("user",userSchema);
+var Users=mongoose.model("users",userSchema);
 
 var caseSchema={
     "user":{
@@ -26,7 +26,7 @@ var caseSchema={
     "diagnosis":[]
 };
 
-var Case=mongoose.model("case",caseSchema);
+var Cases=mongoose.model("cases",caseSchema);
 
 var diagnosisSchema={
     "case":{
@@ -45,10 +45,10 @@ var Diagnosis=mongoose.model("diagnosis",diagnosisSchema);
 
 module.exports={
     userSchema:userSchema,
-    User:User,
+    Users:Users,
     caseSchema:caseSchema,
-    Case:Case,
+    Cases:Cases,
     diagnosisSchema:diagnosisSchema,
     Diagnosis:Diagnosis,
     mongoose:mongoose
-}
+};
