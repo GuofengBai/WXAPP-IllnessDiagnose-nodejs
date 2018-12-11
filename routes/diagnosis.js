@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/case/:id',function getDiagnosisListOfCase(req, res, next) {
     var caseid=schema.mongoose.Types.ObjectId(req.params.id);
-    schema.Case.find({_id: caseid}).populate("diagnosis").exec(function (err, data) {
+    schema.Case.find({_id: caseid}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -20,21 +20,34 @@ router.get('/case/:id',function getDiagnosisListOfCase(req, res, next) {
 
 router.post('/make',function makeDiagnosis(req, res, next){
     var diagnosis=req.body.diagnosis;
+    var doctor_name="";
 
-    var newdiag=new schema.Diagnosis({
-        "case":schema.mongoose.Schema.Types.ObjectId(diagnosis.caseid),
-        "doctor":diagnosis.schema.mongoose.Schema.Types.ObjectId(userid),
-        "date":diagnosis.date,
-        "content":diagnosis.content
-    });
-    newdiag.save(function(err,data){
+    schema.User.findOne({_id: diagnosis.doctor,type:"doctor"}).exec(function (err, data) {
         if(err){
-            res.json(err);
             console.log(err);
-        } else{
-            res.json({"success":"success"});
+            res.json(err);
+        }else{
+            doctor_name=data.name;
+            var newdiag=new schema.Diagnosis({
+                "case":schema.mongoose.Schema.Types.ObjectId(diagnosis.caseid),
+                "doctor":schema.mongoose.Schema.Types.ObjectId(diagnosis.doctor),
+                "doctor_name":doctor_name,
+                "date":diagnosis.date,
+                "content":diagnosis.content
+            });
+            newdiag.save(function(err,diag){
+                if(err){
+                    res.json(err);
+                    console.log(err);
+                } else{
+                    res.json({"success":"success"});
+                }
+            });
+
         }
     });
+
+
 });
 
 

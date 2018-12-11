@@ -1,0 +1,37 @@
+extends layout
+block title
+    title case list
+block stylesheet
+
+block content
+    div.container
+        div.row
+            ul.nav.nav-pills.nav-fill
+                li.nav-item
+                    a.nav-link(href="") 列表
+                li.nav-item
+                    a.nav-link.active(href="") 列表
+        hr
+        - if(err)
+        div.row
+            p #{err}
+        - else
+        table.table.table-hover
+            thead
+                tr
+                    th 名称
+                    th 重要程度
+            tbody
+                each case in cases
+                    tr
+                        td
+                            b
+                                a(href="/case/" + case._id)   #{case.title}
+                        td #{case.user}
+
+
+
+
+        hr
+
+block script

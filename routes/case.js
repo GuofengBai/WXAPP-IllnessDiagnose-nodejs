@@ -47,7 +47,7 @@ router.get('/search/:keyword', function getCaseListWithQuery(req, res, next) {
 
 router.get('/user/:id', function getCaseListOfUser(req, res, next) {
     var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.User.findOne({_id: id}).populate('cases').exec(function (err, data) {
+    schema.User.findOne({_id: id}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -59,7 +59,7 @@ router.get('/user/:id', function getCaseListOfUser(req, res, next) {
 
 router.get('/:id',function getCaseDetail(req, res, next) {
     var id= schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.Case.findOne({_id: id}).populate("user").populate("diagnosis").exec(function (err, data) {
+    schema.Case.findOne({_id: id}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);

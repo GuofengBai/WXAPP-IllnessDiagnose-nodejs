@@ -9,10 +9,8 @@ var userSchema={
     "openid":String,
     "session_key":String,
     "type":String ,  //user,doctor
-    "cases":{
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'case'
-    }
+    "cases":[],
+    "diagnosis":[],
 };
 var User=mongoose.model("user",userSchema);
 
@@ -25,10 +23,7 @@ var caseSchema={
     "title":String,
     "content":String,
     "pictures":[],
-    "diagnosis":{
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'diagnosis'
-    }
+    "diagnosis":[]
 };
 
 var Case=mongoose.model("case",caseSchema);
@@ -42,6 +37,7 @@ var diagnosisSchema={
         type: mongoose.Schema.Types.ObjectId,
         ref : 'user'
     },
+    "doctor_name":String,
     "date":String,
     "content":String
 };
