@@ -6,24 +6,35 @@ var userSchema={
     "age":String,
     "gender":String,
     "contact":String,
+    "introduction":String,
     "openid":String,
     "session_key":String,
     "type":String ,  //user,doctor
-    "cases":[],
-    "diagnosis":[],
+    "cases":[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'cases'
+    }],
+    "diagnosis":[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'diagnosis'
+    }],
 };
 var Users=mongoose.model("users",userSchema);
 
 var caseSchema={
     "user":{
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'user'
+        ref : 'users'
     },
     "date":String,
     "title":String,
     "content":String,
+    "replied":{ type: Boolean, default: false },
     "pictures":[],
-    "diagnosis":[]
+    "diagnosis":[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'diagnosis'
+    }]
 };
 
 var Cases=mongoose.model("cases",caseSchema);
@@ -31,13 +42,12 @@ var Cases=mongoose.model("cases",caseSchema);
 var diagnosisSchema={
     "case":{
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'case'
+        ref : 'cases'
     },
     "doctor":{
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'user'
+        ref : 'users'
     },
-    "doctor_name":String,
     "date":String,
     "content":String
 };

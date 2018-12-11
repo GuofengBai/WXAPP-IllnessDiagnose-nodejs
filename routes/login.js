@@ -15,6 +15,7 @@
 */
 var express = require('express');
 var router = express.Router();
+var request = require('request');
 
 const appid="aaa";
 const secret="sec";
@@ -23,23 +24,65 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/login/:code', function(req, res, next) {
-  var res_code=req.params.code;
+router.get('/login', function(req, res, next) {
+  var res_code=req.body.code;
   var l = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + 'secret=' + secret + 'js_code=' + res_code + 'grant_type=authorization_code';
-    request({
+  request({
         url: l,
         data: {},
         method: 'GET',
         success: function (response) {
-          console.log(response);
-            res.json(response);
-          //checkifregistered
-            // register
-          res.json(response);
+            console.log(response);
+            //checkifregistered
+
+            var openId="aaa";
+            var session_key="aaa";
+            schema.Users.findOne({ openid:openId }, function (err, user) {
+                if(!err){
+                    if(user){
+                        if(user.type){
+                            res.json({
+                                "id":user._id,
+                                "type":user.type,
+                                "hasType":true,
+                            });
+                        }else{
+                            res.json({
+                                "id":user._id,
+                                "hasType":false,
+                            });
+                        }
+                    }else{
+                        var newuser=new schema.Users({
+                            "openid":openId,
+                            "session_key":session_key
+                        });
+                        newuser.save(function(err,data){
+                            if(err){
+                                res.json(err);
+                                console.log(err);
+                            } else{
+                                res.json({
+                                    "id":data._id,
+                                    "hasType":false,
+                                });
+                            }
+                        });
+                    }
+                }else{
+                    console.log(err);
+                }
+            });
         }
     });
 });
 
+router.post('/test1', function(req, res, next) {
+    var aaa=req.body;
+    console.log(aaa.name);
+    res.json(aaa.name);
+
+});
 
 
 module.exports = router;

@@ -2,16 +2,10 @@ var express = require('express');
 var router = express.Router();
 var schema=require('../utils/dbSchema');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
-
-
 
 router.get('/:id', function(req, res, next) {
     var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.Users.findOne({_id: id,type:"user"}).exec(function (err, data) {
+    schema.Users.findOne({_id: id}).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -19,12 +13,80 @@ router.get('/:id', function(req, res, next) {
             res.json(data);
         }
     });
-    //let user=await userUtil.getUserInfo(id);
-   // res.end(JSON.stringify(user));
 });
+
+router.get('/:id/info', function(req, res, next) {
+    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    schema.Users.findOne({_id: id}).populate({
+        path: 'cases',
+        populate: {path: 'diagnosis'}
+    }).exec(function (err, data) {
+        if(err){
+            console.log(err);
+            res.json(err);
+        }else{
+            res.json(data);
+        }
+    });
+});
+
+router.post('/:id/type',function(req, res, next){
+    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var type=req.body.type;
+    schema.Users.findOne({ _id:id }, function (err, user) {
+        if(err){
+            console.log(err);
+        }else{
+            if(!user.type){
+                user.type=type;
+                user.save();
+                res.json({"status":"OK"});
+            }
+        }
+    });
+});
+
+router.post('/:id/info',function(req, res, next){
+    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var name=req.body.name;
+    var age=req.body.age;
+    var gender=req.body.gender;
+    var contact=req.body.contact;
+    var introduction=req.body.introduction;
+    schema.Users.findOne({ _id:id }, function (err, user) {
+        if(err){
+            console.log(err);
+        }else{
+            user.name=name;
+            user.age=age;
+            user.gender=gender;
+            user.contact=contact;
+            user.introduction=introduction;
+            user.save();
+            res.json({"status":"OK"});
+        }
+    });
+});
+
+router.post('/:id/account',function(req, res, next){
+    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var phoneNumber=req.body.phoneNumber;
+    var password=req.body.password;
+    schema.Users.findOne({ _id:id }, function (err, user) {
+        if(err){
+            console.log(err);
+        }else{
+            user.phoneNumber=phoneNumber;
+            user.password=password;
+            user.save();
+            res.json({"status":"OK"});
+        }
+    });
+});
+
 router.get('/doctor/:id',function(req, res, next) {
     var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.Users.findOne({_id: id,type:"doctor"}).exec(function (err, data) {
+    schema.Users.findOne({_id: id,type:"doctor"}).populate('diagnosis').exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -38,7 +100,7 @@ router.post('/register',function(req, res, next){
     var openid=req.body.openid;
     var session_key=req.body.session_key;
     var type=req.body.type;
-    var newuser=new schema.User({
+    var newuser=new schema.Users({
         "openid":openid,
         "session_key":session_key,
         "type":type
@@ -68,26 +130,22 @@ router.get('/registered/:id',function(req, res, next) {
     });
 });
 
-router.post('/update/:id',function(req, res, next){
+
+router.get('/:id/case', function getCaseListOfUser(req, res, next) {
     var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    var session_key=req.body.session_key;
-    var type=req.body.type;
-    //....not complete
-    schema.Users.findOne({ _id:id }, function (err, user) {
+    schema.Users.findOne({_id: id}).populate('cases').exec(function (err, data) {
         if(err){
             console.log(err);
+            res.json(err);
         }else{
-            if(type){user.type=type;}
-            if(phoneNumber){user.phoneNumber=phoneNumber;}
-            if(password){user.password=password;}
-            user.save();
-            res.json({"success":"success"});
+            res.json(data.cases);
         }
     });
 });
 
-router.post('/all',function(req, res, next) {
-    schema.Users.find().exec(function (err, data) {
+
+router.get('/all',function(req, res, next) {
+    schema.Users.find().populate('cases').exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -98,15 +156,15 @@ router.post('/all',function(req, res, next) {
     });
 });
 
-router.post('/test1',function(req, res, next) {
+router.get('/test1',function(req, res, next) {
 
     var aaa=new schema.Users({
-        "name":"路人甲",
+        "name":"路人丁",
         "age":"20",
         "gender":"男",
-        "contact":"15151545415",
-        "openid":"123456",
-        "session_key":"123456",
+        "contact":"1515154s5415",
+        "openid":"1234sdsa56",
+        "session_key":"123sadsa456",
         "type":"user"
     });
 
@@ -115,21 +173,16 @@ router.post('/test1',function(req, res, next) {
             res.json(err);
             console.log(err);
         } else {
+            var case1=new schema.Cases({
+                user:aaa._id,
+                title:"asdada"
+            });
+            case1.save();
+
             res.json({"success": "success"});
         }
         });
 
-    var bbb=new schema.Users({
-        "name":"医生甲",
-        "age":"20",
-        "gender":"男",
-        "contact":"1515154541555",
-        "openid":"12345678",
-        "session_key":"12345678",
-        "type":"doctor"
-    });
-
-    bbb.save();
 });
 
 router.get('/test2',function(req, res, next) {
@@ -141,11 +194,6 @@ router.get('/test2',function(req, res, next) {
             res.json(data);
         }
     });
-});
-
-router.get('/test3',function(req, res, next) {
-    console.log("aaa");
-    res.render('index');
 });
 
 module.exports = router;

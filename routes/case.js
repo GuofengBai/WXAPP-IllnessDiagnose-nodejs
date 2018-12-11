@@ -3,13 +3,9 @@ var router = express.Router();
 var schema=require('../utils/dbSchema');
 
 const page_size=20;
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
 
 router.get('/list', function getCaseList(req, res, next) {
-    schema.Case.find().populate({path:'user'}).exec(function (err, data) {
+    schema.Cases.find().populate('user','name').exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -22,7 +18,7 @@ router.get('/list', function getCaseList(req, res, next) {
 router.get('/list/:page', function getCaseListByPage(req, res, next) {
     var page=req.params.page;
     var skip_num=(page-1)*page_size;
-    schema.Cases.find().skip(skip_num).limit(page_size).populate({path:'user'}).exec(function (err, data) {
+    schema.Cases.find().skip(skip_num).limit(page_size).populate('user','name').exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -33,9 +29,9 @@ router.get('/list/:page', function getCaseListByPage(req, res, next) {
 });
 
 
-router.get('/search/:keyword', function getCaseListWithQuery(req, res, next) {
-    var keyword=req.params.keyword;
-    schema.Cases.find({title: {'$regex': keyword}}).populate({path:'user'}).exec(function (err, data) {
+router.get('/search', function getCaseListWithQuery(req, res, next) {
+    var keyword=req.query.keyword;
+    schema.Cases.find({title: {'$regex': keyword}}).populate('user','name').exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -45,21 +41,12 @@ router.get('/search/:keyword', function getCaseListWithQuery(req, res, next) {
     });
 });
 
-router.get('/user/:id', function getCaseListOfUser(req, res, next) {
-    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.Users.findOne({_id: id}).exec(function (err, data) {
-        if(err){
-            console.log(err);
-            res.json(err);
-        }else{
-            res.json(data.cases);
-        }
-    });
-});
-
-router.get('/:id',function getCaseDetail(req, res, next) {
+router.get('/get/:id',function getCaseDetail(req, res, next) {
     var id= schema.mongoose.Schema.Types.ObjectId(req.params.id);
-    schema.Cases.findOne({_id: id}).exec(function (err, data) {
+    schema.Cases.findOne({_id: id}).populate('user').populate({
+        path: 'diagnosis',
+        populate: {path: 'doctor'}
+    }).exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -70,27 +57,47 @@ router.get('/:id',function getCaseDetail(req, res, next) {
 });
 
 router.post('/create',function createCase(req, res, next){
-    var casetmp=req.body.case;
+    var userId=req.body.userId;
 
     var newcase=new schema.Cases({
-        "user":schema.mongoose.Schema.Types.ObjectId(casetmp.userid),
-        "date":casetmp.date,
-        "title":casetmp.title,
-        "content":casetmp.content,
-        "pictures":casetmp.pictures
+        "user":schema.mongoose.Schema.Types.ObjectId(req.body.userId),
+        "date":req.body.date,
+        "title":req.body.title,
+        "content":req.body.content,
+        "pictures":req.body.pictures
     });
     newcase.save(function(err,data){
         if(err){
-            res.json(err);
+            res.json({"status":"false","error":err});
             console.log(err);
         } else{
-            res.json({"success":"success"});
+            schema.Users.findOne({_id:userId ,type:"user"}).exec(function (err, usertmp){
+                usertmp.cases.push(data._id);
+                usertmp.save();
+                res.json({"status":"OK","caseId":data._id});
+            });
         }
     });
 });
 
-router.get('/savepicture', function(req, res, next) {
-    res.render('index', { title: 'Express' });
+router.post('/:id/images/:pic_index', function(req, res, next) {
+    var id=req.params.id;
+    var pic_index=req.params.pic_index;
+    var file_name=String(id)+pic_index+".png";
+
+
+
+
+
+    schema.Cases.findOne({_id:id }).exec(function (err, casetmp) {
+        if(!error){
+            casetmp.pictures.push(file_name);
+            casetmp.save();
+            res.json({"status":"OK"});
+        }
+    });
+
+
 });
 
 
