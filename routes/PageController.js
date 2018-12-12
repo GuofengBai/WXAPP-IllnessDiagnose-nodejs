@@ -12,10 +12,16 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/login', function(req, res, next) {
 
+});
 
-router.get('/case/list', function getCaseList(req, res, next) {
-    schema.Case.find().exec(function (err, data) {
+router.post('/login', function(req, res, next) {
+
+});
+
+router.get('/cases', function getCaseList(req, res, next) {
+    schema.Cases.find().exec(function (err, data) {
         if(err){
             console.log(err);
             res.json(err);
@@ -25,6 +31,20 @@ router.get('/case/list', function getCaseList(req, res, next) {
     });
 });
 
+router.get('/user/:id/cases', function(req, res, next) {
 
+});
+
+router.get('/case/:id', function(req, res, next) {
+
+});
+
+router.post('/case/:id/diagnosis', function(req, res, next) {
+
+});
+
+router.get('/user/:id/info', function(req, res, next) {
+
+});
 
 module.exports = router;

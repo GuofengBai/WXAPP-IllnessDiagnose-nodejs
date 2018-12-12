@@ -85,9 +85,16 @@ router.post('/:id/images/:pic_index', function(req, res, next) {
     var pic_index=req.params.pic_index;
     var file_name=String(id)+pic_index+".png";
 
-
-
-
+    var imgData = req.body.imgData;
+    var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
+    var dataBuffer = new Buffer(base64Data, 'base64');
+    fs.writeFile('public/images/'+file_name, dataBuffer, function(err) {
+        if(err){
+            res.send(err);
+        }else{
+            res.json({"status":"OK"});
+        }
+    });
 
     schema.Cases.findOne({_id:id }).exec(function (err, casetmp) {
         if(!error){

@@ -16,6 +16,7 @@
 var express = require('express');
 var router = express.Router();
 var request = require('request');
+var schema=require('../utils/dbSchema');
 
 const appid="aaa";
 const secret="sec";
@@ -35,7 +36,7 @@ router.get('/login', function(req, res, next) {
             console.log(response);
             //checkifregistered
 
-            var openId="aaa";
+            var openId=res.data.openid;
             var session_key="aaa";
             schema.Users.findOne({ openid:openId }, function (err, user) {
                 if(!err){
