@@ -18,26 +18,24 @@ var router = express.Router();
 var request = require('request');
 var schema=require('../utils/dbSchema');
 
-const appid="aaa";
-const secret="sec";
+const appid="wxe7cb59af73d67550";
+const secret="721e8d313f4c902e4db85c0ef56e1c88";
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/login', function(req, res, next) {
+router.post('/login', function(req, res, next) {
   var res_code=req.body.code;
-  var l = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + 'secret=' + secret + 'js_code=' + res_code + 'grant_type=authorization_code';
+  var l = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + '&secret=' + secret + '&js_code=' + res_code + '&grant_type=authorization_code';
   request({
         url: l,
         data: {},
         method: 'GET',
         success: function (response) {
-            console.log(response);
-            //checkifregistered
+            var body=JSON.parse(response.body);
 
-            var openId=res.data.openid;
-            var session_key="aaa";
+            var openId=body.openid;
             schema.Users.findOne({ openid:openId }, function (err, user) {
                 if(!err){
                     if(user){
@@ -56,7 +54,6 @@ router.get('/login', function(req, res, next) {
                     }else{
                         var newuser=new schema.Users({
                             "openid":openId,
-                            "session_key":session_key
                         });
                         newuser.save(function(err,data){
                             if(err){
@@ -83,6 +80,20 @@ router.post('/test1', function(req, res, next) {
     console.log(aaa.name);
     res.json(aaa.name);
 
+});
+
+router.post('/test2', function(req, res, next) {
+    var res_code="0817WAyh2rG6bB0kdmvh2nloyh27WAyD";
+    var l = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + '&secret=' + secret + '&js_code=' + res_code + '&grant_type=authorization_code';
+    request(l, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(response.body);
+            var body=JSON.parse(response.body);
+
+            var openId=body.openid;
+            res.json(openId);
+        }
+    });
 });
 
 
