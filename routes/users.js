@@ -53,6 +53,7 @@ router.post('/:id/info',function(req, res, next){
     var gender=req.body.gender;
     var contact=req.body.contact;
     var introduction=req.body.introduction;
+    var type=req.body.type;
     schema.Users.findOne({ _id:id }, function (err, user) {
         if(err){
             console.log(err);
@@ -62,6 +63,7 @@ router.post('/:id/info',function(req, res, next){
             user.gender=gender;
             user.contact=contact;
             user.introduction=introduction;
+            user.type=type;
             user.save();
             res.json({"status":"OK"});
         }
