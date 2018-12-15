@@ -6,7 +6,7 @@ let path = require("path");
 
 const page_size=20;
 
-router.get('/list', function getCaseList(req, res, next) {
+router.get('/', function getCaseList(req, res, next) {
     schema.Cases.find().populate('user','name').exec(function (err, data) {
         if(err){
             console.log(err);
@@ -43,8 +43,8 @@ router.get('/search', function getCaseListWithQuery(req, res, next) {
     });
 });
 
-router.get('/get/:id',function getCaseDetail(req, res, next) {
-    var id= schema.mongoose.Schema.Types.ObjectId(req.params.id);
+router.get('/:id',function getCaseDetail(req, res, next) {
+    var id= schema.mongoose.Types.ObjectId(req.params.id);
     schema.Cases.findOne({_id: id}).populate('user').populate({
         path: 'diagnosis',
         populate: {path: 'doctor'}
@@ -58,22 +58,20 @@ router.get('/get/:id',function getCaseDetail(req, res, next) {
     });
 });
 
-router.post('/create',function createCase(req, res, next){
+router.post('/',function createCase(req, res, next){
     var userId=req.body.userId;
-
     var newcase=new schema.Cases({
-        "user":schema.mongoose.Schema.Types.ObjectId(req.body.userId),
+        "user":schema.mongoose.Types.ObjectId(req.body.userId),
         "date":req.body.date,
         "title":req.body.title,
         "content":req.body.content,
-        "pictures":req.body.pictures
     });
     newcase.save(function(err,data){
         if(err){
             res.json({"status":"false","error":err});
             console.log(err);
         } else{
-            schema.Users.findOne({_id:userId ,type:"user"}).exec(function (err, usertmp){
+            schema.Users.findOne({_id:userId }).exec(function (err, usertmp){
                 usertmp.cases.push(data._id);
                 usertmp.save();
                 res.json({"status":"OK","caseId":data._id});
@@ -84,6 +82,7 @@ router.post('/create',function createCase(req, res, next){
 
 router.post('/:id/images/:pic_index', function(req, res, next) {
     var id=req.params.id;
+    console.log(id);
     var pic_index=req.params.pic_index;
     var file_name=String(id)+pic_index;
 
@@ -113,7 +112,7 @@ router.post('/:id/images/:pic_index', function(req, res, next) {
     });
 
     schema.Cases.findOne({_id:id }).exec(function (err, casetmp) {
-        if(!error){
+        if(!err){
             casetmp.pictures.push(file_name);
             casetmp.save();
             res.json({"status":"OK"});

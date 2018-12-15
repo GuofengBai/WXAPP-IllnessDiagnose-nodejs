@@ -22,16 +22,17 @@ router.post('/case/:id',function makeDiagnosis(req, res, next){
     var content=req.body.content;
     var date=req.body.date;
     var doctorId=schema.mongoose.Types.ObjectId(req.body.doctorId);
-    var caseId=schema.mongoose.Types.ObjectId(req.params.caseId);
+    var caseId=schema.mongoose.Types.ObjectId(req.params.id);
+    console.log(req.body);
 
-    schema.Users.findOne({_id:doctorId ,type:"doctor"}).exec(function (err, doctor) {
+    schema.Users.findOne({_id:doctorId }).exec(function (err, doctor) {
         if(err){
             console.log(err);
             res.json(err);
         }else{
             var newdiag=new schema.Diagnosis({
-                "case":schema.mongoose.Schema.Types.ObjectId(caseId),
-                "doctor":schema.mongoose.Schema.Types.ObjectId(doctorId),
+                "case":schema.mongoose.Types.ObjectId(caseId),
+                "doctor":schema.mongoose.Types.ObjectId(doctorId),
                 "date":date,
                 "content":content
             });
@@ -43,7 +44,7 @@ router.post('/case/:id',function makeDiagnosis(req, res, next){
                     doctor.diagnosis.push(diag._id);
                     doctor.save();
                     schema.Cases.findOne({_id:caseId }).exec(function (err, casetmp) {
-                        if(!error){
+                        if(!err){
                             casetmp.diagnosis.push(diag._id);
                             casetmp.replied=true;
                             casetmp.save();

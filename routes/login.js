@@ -28,13 +28,9 @@ router.get('/', function(req, res, next) {
 router.post('/login', function(req, res, next) {
   var res_code=req.body.code;
   var l = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + '&secret=' + secret + '&js_code=' + res_code + '&grant_type=authorization_code';
-  request({
-        url: l,
-        data: {},
-        method: 'GET',
-        success: function (response) {
+    request(l, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
             var body=JSON.parse(response.body);
-
             var openId=body.openid;
             schema.Users.findOne({ openid:openId }, function (err, user) {
                 if(!err){

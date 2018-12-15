@@ -2,21 +2,25 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://192.168.1.107:27017/illnessDiagnose');
 
 var userSchema={
-    "name":String,
-    "age":String,
-    "gender":String,
-    "contact":String,
-    "introduction":String,
+    "name":{ type: String, default: null },
+    "age":{ type: String, default: null },
+    "gender":{ type: String, default: null },
+    "contact":{ type: String, default: null },
+    "introduction":{ type: String, default: null },
     "openid":String,
-    "session_key":String,
-    "type":String ,  //user,doctor
+    "session_key":{ type: String, default: null },
+    "type":{ type: String, default: null } ,  //user,doctor
+    "phoneNumber":{ type: String, default: null },
+    "password":{ type: String, default: null },
     "cases":[{
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'cases'
+        ref : 'cases',
+        default: []
     }],
     "diagnosis":[{
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'diagnosis'
+        ref : 'diagnosis',
+        default: []
     }],
 };
 var Users=mongoose.model("users",userSchema);
@@ -33,7 +37,8 @@ var caseSchema={
     "pictures":[],
     "diagnosis":[{
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'diagnosis'
+        ref : 'diagnosis',
+        default: []
     }]
 };
 

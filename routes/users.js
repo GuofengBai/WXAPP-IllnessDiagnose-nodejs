@@ -4,7 +4,7 @@ var schema=require('../utils/dbSchema');
 
 
 router.get('/:id', function(req, res, next) {
-    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var id=schema.mongoose.Types.ObjectId(req.params.id);
     schema.Users.findOne({_id: id}).exec(function (err, data) {
         if(err){
             console.log(err);
@@ -16,7 +16,7 @@ router.get('/:id', function(req, res, next) {
 });
 
 router.get('/:id/info', function(req, res, next) {
-    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var id=schema.mongoose.Types.ObjectId(req.params.id);
     schema.Users.findOne({_id: id}).populate({
         path: 'cases',
         populate: {path: 'diagnosis'}
@@ -31,7 +31,7 @@ router.get('/:id/info', function(req, res, next) {
 });
 
 router.post('/:id/type',function(req, res, next){
-    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var id=schema.mongoose.Types.ObjectId(req.params.id);
     var type=req.body.type;
     schema.Users.findOne({ _id:id }, function (err, user) {
         if(err){
@@ -47,7 +47,7 @@ router.post('/:id/type',function(req, res, next){
 });
 
 router.post('/:id/info',function(req, res, next){
-    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var id=schema.mongoose.Types.ObjectId(req.params.id);
     var name=req.body.name;
     var age=req.body.age;
     var gender=req.body.gender;
@@ -71,7 +71,7 @@ router.post('/:id/info',function(req, res, next){
 });
 
 router.post('/:id/account',function(req, res, next){
-    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var id=schema.mongoose.Types.ObjectId(req.params.id);
     var phoneNumber=req.body.phoneNumber;
     var password=req.body.password;
     schema.Users.findOne({ _id:id }, function (err, user) {
@@ -87,7 +87,7 @@ router.post('/:id/account',function(req, res, next){
 });
 
 router.get('/doctor/:id',function(req, res, next) {
-    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var id=schema.mongoose.Types.ObjectId(req.params.id);
     schema.Users.findOne({_id: id,type:"doctor"}).populate('diagnosis').exec(function (err, data) {
         if(err){
             console.log(err);
@@ -118,7 +118,7 @@ router.post('/register',function(req, res, next){
 });
 
 router.get('/registered/:id',function(req, res, next) {
-    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var id=schema.mongoose.Types.ObjectId(req.params.id);
     schema.Users.findOne({ _id:id }, function (err, user) {
         if(!err){
             if(user){
@@ -134,7 +134,7 @@ router.get('/registered/:id',function(req, res, next) {
 
 
 router.get('/:id/case', function getCaseListOfUser(req, res, next) {
-    var id=schema.mongoose.Schema.Types.ObjectId(req.params.id);
+    var id=schema.mongoose.Types.ObjectId(req.params.id);
     schema.Users.findOne({_id: id}).populate('cases').exec(function (err, data) {
         if(err){
             console.log(err);
