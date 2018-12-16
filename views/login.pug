@@ -1,0 +1,14 @@
+extends layout
+block title
+    title
+block stylesheet
+block content
+    div.container
+        h4 登录
+            form.form-group
+                label(for='phoneNumber') 手机号：
+                input.form-control#phoneNumber(type='text')
+                label(for='password') 密码：
+                input.form-control#password(type='text')
+                br
+                button.btn.btn-primary.btn-lg.float-right#newbugBtn(type='submit',action="/page/login", method="POST") 登录

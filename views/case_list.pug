@@ -8,30 +8,26 @@ block content
         div.row
             ul.nav.nav-pills.nav-fill
                 li.nav-item
-                    a.nav-link(href="") 病例列表
+                    a.nav-link.active(href="/page/cases") 病例列表
                 li.nav-item
-                    a.nav-link.active(href="") 用户中心
+                    a.nav-link(href="") 用户中心
         hr
-        - if(err)
-        div.row
-            p #{err}
-        - else
         table.table.table-hover
             thead
                 tr
-                    th 名称
-                    th 重要程度
+                    th 标题
+                    th 咨询者
+                    th 回复情况
             tbody
-                each case in cases
+                each caseitem in cases
                     tr
                         td
                             b
-                                a(href="/case/" + case._id)   #{case.title}
-                        td #{case.user}
-
-
-
-
+                                a(href="/page/case/" + caseitem._id)   #{caseitem.title}
+                        td #{caseitem.user.name}
+                        if caseitem.replied
+                            td 已回复
+                        else
+                            td 未回复
         hr
-
 block script

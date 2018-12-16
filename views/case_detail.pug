@@ -1,0 +1,62 @@
+extends layout
+block title
+    title
+block stylesheet
+block content
+    div.container
+        div.row
+            ul.nav.nav-pills.nav-fill
+                li.nav-item
+                    a.nav-link.active(href="/page/cases") 病例列表
+                li.nav-item
+                    a.nav-link(href="") 用户中心
+        hr
+        table.table.table-hover
+            tbody
+                tr
+                    td 标题
+                    td #{caseitem.title}
+                tr
+                    td 咨询人
+                    td #{caseitem.user.name}
+                tr
+                    td 日期
+                    td #{caseitem.date}
+                tr
+                    td 说明
+                    td #{caseitem.content}
+                tr
+                    td 是否回复
+                    if caseitem.replied
+                        td 已回复
+                    else
+                        td 未回复
+                tr
+                    td 描述图片
+                    td
+                        each pic in caseitem.pictures
+                            image(src="/images/"+pic)
+        hr
+        br
+        h4 诊断意见
+        table.table.table-hover
+            thead
+                tr
+                    th 日期
+                    th 内容
+            tbody
+                each diag in caseitem.diagnosis
+                    tr
+                        td #{diag.date}
+                        td #{diag.content}
+        hr
+        h4 更改状态
+            form.form-group
+                label(for='content') 说明：
+                input.form-control#content(type='text')
+                input.form-control#caseId(type='hidden',value=caseitem._id)
+                input.form-control#doctorId(type='hidden',value=doctor)
+                br
+                button.btn.btn-primary.btn-lg.float-right#newbugBtn(type='button',onClick='newDiag()') 创建
+block script
+    script(src="/javascripts/bug_change.js")
