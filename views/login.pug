@@ -5,10 +5,10 @@ block stylesheet
 block content
     div.container
         h4 登录
-            form.form-group
+            form.form-group(action="/page/login", method="POST")
                 label(for='phoneNumber') 手机号：
-                input.form-control#phoneNumber(type='text')
+                input.form-control#phoneNumber(type='text',name='phoneNumber')
                 label(for='password') 密码：
-                input.form-control#password(type='text')
+                input.form-control#password(type='password',name='password')
                 br
-                button.btn.btn-primary.btn-lg.float-right#newbugBtn(type='submit',action="/page/login", method="POST") 登录
+                button.btn.btn-primary.btn-lg.float-right#newbugBtn(type='submit') 登录

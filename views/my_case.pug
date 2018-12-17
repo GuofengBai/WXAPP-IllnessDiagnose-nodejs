@@ -1,0 +1,33 @@
+extends layout
+block title
+    title case list
+block stylesheet
+
+block content
+    div.container
+        div.row
+            ul.nav.nav-pills.nav-fill
+                li.nav-item
+                    a.nav-link(href="/page/cases") 问题列表
+                if type == "用户"
+                    li.nav-item
+                        a.nav-link.active(href="/page/user/" + userid + "/cases") 我的问题
+                li.nav-item
+                    a.nav-link(href="/page/user/" + userid + "/info") 用户中心
+        table.table.table-hover
+            thead
+                tr
+                    th 标题
+                    th 回复情况
+            tbody
+                each caseitem in cases
+                    tr
+                        td
+                            b
+                                a(href="/page/case/" + caseitem._id)   #{caseitem.title}
+                        if caseitem.replied
+                            td 已回复
+                        else
+                            td 未回复
+        hr
+block script

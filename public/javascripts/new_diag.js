@@ -16,10 +16,14 @@ function newDiag(){
         },
         dataType : 'json',
         type : 'post',
-        error:function(err){
+        success: function (result) {
             location.reload(true);
             alert('创建成功！');
+        },
+        error:function(err){
+            alert('创建失败！');
         }
+
     });
 
 }

@@ -8,10 +8,12 @@ block content
         div.row
             ul.nav.nav-pills.nav-fill
                 li.nav-item
-                    a.nav-link.active(href="/page/cases") 病例列表
+                    a.nav-link.active(href="/page/cases") 问题列表
+                if type == "用户"
+                    li.nav-item
+                        a.nav-link(href="/page/user/" + userid + "/cases") 我的问题
                 li.nav-item
-                    a.nav-link(href="") 用户中心
-        hr
+                    a.nav-link(href="/page/user/" + userid + "/info") 用户中心
         table.table.table-hover
             thead
                 tr

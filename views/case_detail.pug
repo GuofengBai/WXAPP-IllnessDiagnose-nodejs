@@ -7,10 +7,12 @@ block content
         div.row
             ul.nav.nav-pills.nav-fill
                 li.nav-item
-                    a.nav-link.active(href="/page/cases") 病例列表
+                    a.nav-link(href="/page/cases") 问题列表
+                if type=="用户"
+                    li.nav-item
+                        a.nav-link(href="/page/user/"+userid+"/cases") 我的问题
                 li.nav-item
-                    a.nav-link(href="") 用户中心
-        hr
+                    a.nav-link(href="/page/user/"+userid+"/info") 用户中心
         table.table.table-hover
             tbody
                 tr
@@ -50,13 +52,14 @@ block content
                         td #{diag.date}
                         td #{diag.content}
         hr
-        h4 更改状态
-            form.form-group
-                label(for='content') 说明：
-                input.form-control#content(type='text')
-                input.form-control#caseId(type='hidden',value=caseitem._id)
-                input.form-control#doctorId(type='hidden',value=doctor)
-                br
-                button.btn.btn-primary.btn-lg.float-right#newbugBtn(type='button',onClick='newDiag()') 创建
+        if type=="医生"
+            h4 初步诊断
+                form.form-group
+                    label(for='content') 说明：
+                    input.form-control#content(type='text')
+                    input.form-control#caseId(type='hidden',value=caseitem._id)
+                    input.form-control#doctorId(type='hidden',value=userid)
+                    br
+                    button.btn.btn-primary.btn-lg.float-right#newbugBtn(type='button',onClick='newDiag()') 创建
 block script
-    script(src="/javascripts/bug_change.js")
+    script(src="/javascripts/new_diag.js")

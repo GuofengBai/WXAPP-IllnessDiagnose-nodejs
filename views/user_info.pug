@@ -1,0 +1,35 @@
+extends layout
+block title
+    title
+block stylesheet
+block content
+    div.container
+        div.row
+            ul.nav.nav-pills.nav-fill
+                li.nav-item
+                    a.nav-link(href="/page/cases") 问题列表
+                if type=="用户"
+                    li.nav-item
+                        a.nav-link(href="/page/user/"+user._id+"/cases") 我的问题
+                li.nav-item
+                    a.nav-link.active(href="/page/user/"+user._id+"/info") 用户中心
+
+        table.table.table-hover
+            tbody
+                tr
+                    td 姓名
+                    td #{user.name}
+                tr
+                    td 年龄
+                    td #{user.age}
+                tr
+                    td 性别
+                    td #{user.gender}
+                tr
+                    td 联系方式
+                    td #{user.contact}
+                tr
+                    td 简介
+                    td #{user.introduction}
+        hr
+        br
